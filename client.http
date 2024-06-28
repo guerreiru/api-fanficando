@@ -1,0 +1,111 @@
+@baseUrl = http://localhost:3000
+@token = {{authenticate.response.body.access_token}}
+
+# @name create_user
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "name": "Fernando",
+  "userName": "guerreiro",
+  "email": "f.luhis@gmail.com",
+  "birthDate": "1997-02-15T00:00:00",
+  "password": "051177"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/session
+Content-Type: application/json
+
+{
+  "email": "f.luhis@gmail.com",
+  "password": "051177"
+}
+
+###
+
+# @name create_category
+POST {{baseUrl}}/category
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "ação"
+}
+
+###
+
+# @name list_categories
+GET  {{baseUrl}}/category
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# @name get_category
+GET  {{baseUrl}}/category/70e72f19-0717-493c-a5a4-c407f1c0063b
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
+# @name create_book
+POST {{baseUrl}}/book
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "As Aventuras de João e Maria 3",
+  "description": "Um conto encantador sobre duas crianças que encontram uma casa feita de doces na floresta.",
+  "audience": "Infantil",
+  "language": "Português",
+  "authorRights": "Todos os direitos reservados",
+  "coverImage": "http://example.com/images/joao_e_maria.jpg",
+  "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
+  "categoryId": "70e72f19-0717-493c-a5a4-c407f1c0063b",
+  "tags": ["Conto de Fadas", "Aventura", "Fantasia"]
+}
+
+###
+
+# @name get_book_rating
+POST {{baseUrl}}/book
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+# @name create_chapter
+POST {{baseUrl}}/chapter
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "chapterName": "capitulo 1",
+  "chapterContent": "<p><b>Teste</b></p>",
+  "chapterImage": "string",
+  "bookId": "5fe148e4-44a8-4d6d-8b9e-4a44efa066f3"
+}
+
+###
+
+# @name create_review
+POST {{baseUrl}}/review
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
+  "bookId": "5fe148e4-44a8-4d6d-8b9e-4a44efa066f3",
+  "rating": 1,
+  "comment": "Este livro foi muito interessante e envolvente!"
+}
+
+### 
+
+# @name get_review
+GET {{baseUrl}}/review/rating/5fe148e4-44a8-4d6d-8b9e-4a44efa066f3
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
