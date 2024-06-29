@@ -8,8 +8,8 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
-import { createUserBodySchema } from "src/schemas/zod.schemas";
+import { ZodValidationPipe } from "src/common/pipes/zod-validation-pipe";
+import { createUserBodySchema } from "src/common/schemas/zod.schemas";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";

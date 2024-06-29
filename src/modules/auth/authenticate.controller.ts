@@ -7,11 +7,11 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { compare } from "bcryptjs";
-import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
+import { ZodValidationPipe } from "src/common/pipes/zod-validation-pipe";
 import {
   AuthenticateBodySchema,
   authenticateBodySchema,
-} from "src/schemas/zod.schemas";
+} from "src/common/schemas/zod.schemas";
 import { UserService } from "../user/user.service";
 
 @Controller("session")
