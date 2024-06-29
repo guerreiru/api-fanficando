@@ -24,12 +24,10 @@ export class BookService {
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const { userId, categoryId, tags: tagNames, ...bookData } = createBookDto;
 
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
+    const user = await this.userRepository.findOneBy({ id: userId });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new NotFoundException("User not found");
     }
 
     const category = await this.categoryRepository.findOne({
@@ -37,7 +35,7 @@ export class BookService {
     });
 
     if (!category) {
-      throw new Error("Category not found");
+      throw new NotFoundException("Category not found");
     }
 
     const tags = await this.getOrCreateTags(tagNames);
@@ -53,7 +51,11 @@ export class BookService {
   }
 
   async findAll() {
-    return await this.bookRepository.findAndCount();
+    return await this.bookRepository.findAndCount({
+      relations: {
+        user: true,
+      },
+    });
   }
 
   async findOne(id: string) {
@@ -70,7 +72,7 @@ export class BookService {
     });
 
     if (!category) {
-      throw new Error("Category not found");
+      throw new NotFoundException("Category not found");
     }
 
     const tags = await this.getOrCreateTags(tagNames);

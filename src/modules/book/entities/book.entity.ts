@@ -25,20 +25,23 @@ export class Book {
   @Column({ type: "varchar", length: 50 })
   title: string;
 
-  @Column({ type: "varchar", length: 120 })
+  @Column({ type: "varchar", length: 200 })
   description: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 50 })
   audience: string;
 
   @Column({ type: "varchar", length: 50 })
   language: string;
 
-  @Column()
+  @Column({ name: "author_rights", nullable: false })
   authorRights: string;
 
   @Column({ name: "cover_image", nullable: true })
   coverImage?: string;
+
+  @Column({ type: "boolean", default: false })
+  mature?: boolean;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
