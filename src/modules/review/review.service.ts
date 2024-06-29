@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateReviewDto } from "./dto/create-review.dto";
 import { UpdateReviewDto } from "./dto/update-review.dto";
 import { Review } from "./entities/review.entity";
@@ -26,7 +26,7 @@ export class ReviewService {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new NotFoundException("User not found");
     }
 
     const book = await this.bookRepository.findOne({
@@ -34,7 +34,7 @@ export class ReviewService {
     });
 
     if (!book) {
-      throw new Error("Book not found");
+      throw new NotFoundException("Book not found");
     }
 
     const review = this.reviewRepository.create({

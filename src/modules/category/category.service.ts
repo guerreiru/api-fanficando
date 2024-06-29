@@ -32,20 +32,18 @@ export class CategoryService {
     });
 
     if (categoryWithSameName) {
-      throw new ConflictException("Category not found");
+      throw new ConflictException("Category already exists");
     }
 
     return await this.categoryRepository.save(createCategoryDto);
   }
 
   findAll() {
-    return this.categoryRepository.find();
+    return this.categoryRepository.findAndCount();
   }
 
   findOne(id: string) {
-    return this.categoryRepository.findOne({
-      where: { id },
-    });
+    return this.categoryRepository.findOneBy({ id });
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
