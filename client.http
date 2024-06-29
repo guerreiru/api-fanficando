@@ -15,6 +15,13 @@ Content-Type: application/json
 
 ###
 
+# @name get_user_by_id
+GET  {{baseUrl}}/user/bba18dfc-9077-48c5-942c-e3bdd1df22eb
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+
 # @name authenticate
 POST {{baseUrl}}/session
 Content-Type: application/json
@@ -44,7 +51,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-# @name get_category
+# @name get_category_by_id
 GET  {{baseUrl}}/category/70e72f19-0717-493c-a5a4-c407f1c0063b
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -59,8 +66,8 @@ Authorization: Bearer {{token}}
 {
   "title": "As Aventuras de João e Maria 3",
   "description": "Um conto encantador sobre duas crianças que encontram uma casa feita de doces na floresta.",
-  "audience": "Infantil",
-  "language": "Português",
+  "audience": "TEENS",
+  "language": "PORTUGUESE",
   "authorRights": "Todos os direitos reservados",
   "coverImage": "http://example.com/images/joao_e_maria.jpg",
   "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
@@ -109,3 +116,39 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 
+###
+
+# @name create_comment
+POST {{baseUrl}}/comment
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "Conteudo do comentário",
+  "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
+  "targetType": "chapter",
+  "targetId": "5fe148e4-44a8-4d6d-8b9e-4a44efa066f3"
+}
+
+###
+# @name get_comments
+GET {{baseUrl}}/comment
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name create_paragraph
+GET {{baseUrl}}/paragraph
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "content": "",
+  "chapterId": "",
+}
+
+###
+# @name get_paragraph_comments
+GET {{baseUrl}}/paragraph/5fe148e4-44a8-4d6d-8b9e-4a44efa066f3/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
