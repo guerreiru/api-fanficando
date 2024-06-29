@@ -10,7 +10,7 @@ export class Tag {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 50 })
   name: string;
 
   @ManyToMany(() => Book, (book) => book.tags)
