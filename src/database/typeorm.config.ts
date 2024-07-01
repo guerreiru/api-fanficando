@@ -1,11 +1,5 @@
-import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { Env, envSchema } from "src/common/schemas/zod.schemas";
 import { entities } from "./entities";
-
-const config = new ConfigService<Env, true>(envSchema);
-
-console.log(config.get("DB_DATABASE"));
 
 export const typeOrmConfig = (env) => {
   const config: TypeOrmModuleOptions = {
