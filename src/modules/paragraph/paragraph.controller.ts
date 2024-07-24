@@ -23,6 +23,11 @@ export class ParagraphController {
     return this.paragraphService.create(createParagraphDto);
   }
 
+  @Post("/createInLot")
+  saveParagraphs(@Body() createParagraphDto: CreateParagraphDto[]) {
+    return this.paragraphService.saveParagraphs(createParagraphDto);
+  }
+
   @Get(":id/comments")
   findAllComments(@Param("id") id: string) {
     return this.paragraphService.findAllComments(id);

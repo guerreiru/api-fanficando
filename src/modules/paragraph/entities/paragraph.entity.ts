@@ -12,7 +12,7 @@ export class Paragraph {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column("varchar", { length: 200 })
+  @Column("text")
   content: string;
 
   @ManyToOne(() => Chapter, (chapter) => chapter.paragraphs)

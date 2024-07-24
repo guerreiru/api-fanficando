@@ -23,7 +23,8 @@ export class TagService {
   }
 
   async create(createTagDto: CreateTagDto) {
-    return await this.tagRepository.save(createTagDto);
+    const tag = this.tagRepository.create(createTagDto);
+    return await this.tagRepository.save(tag);
   }
 
   async findAll() {

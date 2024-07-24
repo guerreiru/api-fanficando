@@ -1,9 +1,7 @@
 import { IsNotEmpty, IsUUID } from "class-validator";
 
 export class CreateParagraphDto {
-  @IsUUID()
-  @IsNotEmpty()
-  id: string;
+  id?: string;
 
   @IsNotEmpty()
   content: string;

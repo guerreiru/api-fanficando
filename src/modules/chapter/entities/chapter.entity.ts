@@ -17,8 +17,11 @@ export class Chapter {
   @Column({ name: "chapter_name", length: 50, type: "varchar" })
   chapterName: string;
 
-  @Column({ name: "chapter_image" })
+  @Column({ name: "chapter_image", nullable: true })
   chapterImage: string;
+
+  @Column({ type: "boolean", default: false })
+  published?: boolean;
 
   @ManyToOne(() => Book, (book) => book.chapters)
   @JoinColumn({ name: "book_id" })

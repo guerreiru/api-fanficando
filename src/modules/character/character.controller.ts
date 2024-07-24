@@ -12,6 +12,7 @@ import { CharacterService } from "./character.service";
 import { CreateCharacterDto } from "./dto/create-character.dto";
 import { UpdateCharacterDto } from "./dto/update-character.dto";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { CreateCharactersDto } from "./dto/create-characters.dto";
 
 @Controller("character")
 @UseGuards(JwtAuthGuard)
@@ -21,6 +22,11 @@ export class CharacterController {
   @Post()
   create(@Body() createCharacterDto: CreateCharacterDto) {
     return this.characterService.create(createCharacterDto);
+  }
+
+  @Post("/create-in-lot")
+  createInLot(@Body() createUsersDto: CreateCharactersDto) {
+    return this.characterService.createInLot(createUsersDto.characters);
   }
 
   @Get()

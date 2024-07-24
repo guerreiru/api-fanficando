@@ -71,7 +71,7 @@ Authorization: Bearer {{token}}
   "authorRights": "Todos os direitos reservados",
   "coverImage": "http://example.com/images/joao_e_maria.jpg",
   "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
-  "categoryId": "70e72f19-0717-493c-a5a4-c407f1c0063b",
+  "categoryId": "3406942c-95e9-4b71-b1b7-e6af21b2c84b",
   "tags": ["Conto de Fadas", "Aventura", "Fantasia"]
 }
 
@@ -152,3 +152,25 @@ Authorization: Bearer {{token}}
 GET {{baseUrl}}/paragraph/5fe148e4-44a8-4d6d-8b9e-4a44efa066f3/comments
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+###
+# @name create_tag
+POST {{baseUrl}}/tag
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "test"
+}
+
+###
+# @name create_character_in_lot
+POST {{baseUrl}}/create-in-lot
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "test"
+}
+
+"bookId": "5fe148e4-44a8-4d6d-8b9e-4a44efa066f3"

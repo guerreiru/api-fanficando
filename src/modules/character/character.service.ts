@@ -23,7 +23,13 @@ export class CharacterService {
   }
 
   async create(createCharacterDto: CreateCharacterDto) {
-    return await this.characterRepository.save(createCharacterDto);
+    const character = this.characterRepository.create(createCharacterDto);
+    return await this.characterRepository.save(character);
+  }
+
+  async createInLot(createCharactersDto: CreateCharacterDto[]) {
+    const characters = this.characterRepository.create(createCharactersDto);
+    return this.characterRepository.save(characters);
   }
 
   async findAll() {

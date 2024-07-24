@@ -35,6 +35,15 @@ export class ParagraphService {
     return await this.paragraphRepository.save(paragraph);
   }
 
+  async saveParagraphs(createParagraphDto: CreateParagraphDto[]) {
+    const paragraphEntities = createParagraphDto.map((paragraph) => {
+      const paragraphEntity = this.paragraphRepository.create(paragraph);
+      return paragraphEntity;
+    });
+
+    return this.paragraphRepository.save(paragraphEntities);
+  }
+
   findAll() {
     return this.commentRepository.findAndCount();
   }

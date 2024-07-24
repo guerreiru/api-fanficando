@@ -43,6 +43,9 @@ export class Book {
   @Column({ type: "boolean", default: false })
   mature?: boolean;
 
+  @Column({ type: "boolean", default: false })
+  published?: boolean;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
@@ -65,7 +68,7 @@ export class Book {
 
   @ManyToMany(() => Tag, (tag) => tag.books)
   @JoinTable({
-    name: "book_tags", // Nome da tabela de junção
+    name: "book_tag", // Nome da tabela de junção
     joinColumn: { name: "book_id", referencedColumnName: "id" },
     inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
   })

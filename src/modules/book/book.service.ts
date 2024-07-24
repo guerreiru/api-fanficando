@@ -102,33 +102,21 @@ export class BookService {
     return book;
   }
 
-  private async getOrCreateTags(tagNames: string[]): Promise<Tag[]> {
-    if (!tagNames || tagNames.length === 0) {
-      return [];
-    }
-
-    // Encontre tags existentes pelo nome
-    const existingTags = await this.tagRepository.findBy({
-      name: In(tagNames),
-    });
-
-    const existingTagNames = existingTags.map((tag) => tag.name);
-
-    // Encontre nomes de tags que não existem no banco de dados
-    const newTagNames = tagNames.filter(
-      (name) => !existingTagNames.includes(name)
-    );
-
-    // Crie novas tags para os nomes que não existem
-    const newTags = await Promise.all(
-      newTagNames.map(async (name) => {
-        const tag = new Tag();
-        tag.name = name;
-        return await this.tagRepository.save(tag);
+  private async getOrCreateTags(tagNames: string[]) {
+    const tags = await Promise.all(
+      tagNames.map(async (name) => {
+        let tag = await this.tagRepository.findOne({ where: { name } });
+        if (!tag) {
+          tag = this.tagRepository.create({ name, usageCount: 1 });
+          await this.tagRepository.save(tag);
+        } else {
+          tag.usageCount++;
+          await this.tagRepository.save(tag);
+        }
+        return tag;
       })
     );
 
-    // Combine tags existentes com as novas tags criadas
-    return [...existingTags, ...newTags];
+    return tags;
   }
 }
