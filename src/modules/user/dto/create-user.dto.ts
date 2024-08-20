@@ -5,4 +5,5 @@ export class CreateUserDto {
   email: string;
   password: string;
   birthDate: string;
+  profileImgUrl: string;
 }

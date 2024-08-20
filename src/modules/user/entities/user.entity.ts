@@ -46,6 +46,9 @@ export class User {
   @Column({ name: "birth_date", nullable: false })
   birthDate: Date;
 
+  @Column({ name: "profile_img_url", nullable: true })
+  profileImgUrl: string;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
