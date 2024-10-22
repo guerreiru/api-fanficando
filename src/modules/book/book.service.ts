@@ -64,6 +64,17 @@ export class BookService {
     });
   }
 
+  async getRecentReleases(quantity: number) {
+    return await this.bookRepository.find({
+      order: { createdAt: "DESC" },
+      take: quantity,
+      relations: {
+        user: true,
+        tags: true,
+      },
+    });
+  }
+
   async update(id: string, updateBookDto: UpdateBookDto) {
     const { categoryId, tags: tagNames, ...bookData } = updateBookDto;
 
@@ -118,5 +129,27 @@ export class BookService {
     );
 
     return tags;
+  }
+
+  async findByCategory(categoryId: string) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      throw new NotFoundException("Category not found");
+    }
+
+    return await this.bookRepository.find({
+      where: {
+        category: {
+          id: categoryId,
+        },
+      },
+      relations: {
+        user: true,
+        tags: true,
+      },
+    });
   }
 }

@@ -173,4 +173,34 @@ Authorization: Bearer {{token}}
   "name": "test"
 }
 
-"bookId": "5fe148e4-44a8-4d6d-8b9e-4a44efa066f3"
+###
+# @name create_user_book
+POST {{baseUrl}}/user-book
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "userId": "bba18dfc-9077-48c5-942c-e3bdd1df22eb",
+  "bookId": "e04cfdac-d477-4c16-b5db-1dcb535a88cc",
+  "status": "lendo",
+  "progress": 0.25,
+  "lastReadChapter": 3
+}
+
+###
+# @name get_user_book
+GET {{baseUrl}}/user-book/user/bba18dfc-9077-48c5-942c-e3bdd1df22eb
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name update_user_book
+PUT {{baseUrl}}/user-book/bba18dfc-9077-48c5-942c-e3bdd1df22eb
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": "concluído",
+  "progress": 1.00,
+  "lastReadChapter": 10
+}

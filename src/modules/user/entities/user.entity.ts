@@ -1,6 +1,7 @@
 import { Book } from "src/modules/book/entities/book.entity";
 import { Comment } from "src/modules/comment/entities/comment.entity";
 import { Review } from "src/modules/review/entities/review.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 import {
   Column,
   CreateDateColumn,
@@ -63,4 +64,7 @@ export class User {
 
   @OneToMany(() => Comment, (comments) => comments.user)
   comments: Comment[];
+
+  @OneToMany(() => UserBook, (userBook) => userBook.user)
+  userBooks: UserBook[];
 }

@@ -8,6 +8,7 @@ import { ParagraphModule } from "./paragraph/paragraph.module";
 import { ReviewModule } from "./review/review.module";
 import { TagModule } from "./tag/tag.module";
 import { UserModule } from "./user/user.module";
+import { UserBookModule } from "./user-book/user-book.module";
 
 export const modules = [
   AuthModule,
@@ -20,4 +21,5 @@ export const modules = [
   ReviewModule,
   TagModule,
   UserModule,
+  UserBookModule,
 ];

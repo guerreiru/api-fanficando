@@ -3,6 +3,7 @@ import { Chapter } from "src/modules/chapter/entities/chapter.entity";
 import { Character } from "src/modules/character/entities/character.entity";
 import { Review } from "src/modules/review/entities/review.entity";
 import { Tag } from "src/modules/tag/entities/tag.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 import { User } from "src/modules/user/entities/user.entity";
 import {
   Column,
@@ -76,4 +77,7 @@ export class Book {
 
   @OneToMany(() => Review, (review) => review.book)
   reviews: Review[];
+
+  @OneToMany(() => UserBook, (userBook) => userBook.book)
+  userBooks: UserBook[];
 }
