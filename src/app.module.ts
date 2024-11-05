@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { envSchema } from "./common/schemas/zod.schemas";
 import { typeOrmConfig } from "./database/typeorm.config";
 import { modules } from "./modules";
+import { AppController } from "./app.controller";
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { modules } from "./modules";
     TypeOrmModule.forRoot(typeOrmConfig(process.env)),
     ...modules,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [TypeOrmModule],
 })
 export class AppModule {}
