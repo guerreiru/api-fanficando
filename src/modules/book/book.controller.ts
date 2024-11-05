@@ -33,6 +33,16 @@ export class BookController {
     return this.bookService.findOne(id);
   }
 
+  @Get("recent-releases/:quantity")
+  getRecentReleases(@Param("quantity") quantity: number) {
+    return this.bookService.getRecentReleases(quantity);
+  }
+
+  @Get("category/:categoryId")
+  findByCategory(@Param("categoryId") categoryId: string) {
+    return this.bookService.findByCategory(categoryId);
+  }
+
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateBookDto: UpdateBookDto) {
     return this.bookService.update(id, updateBookDto);

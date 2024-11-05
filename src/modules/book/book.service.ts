@@ -24,12 +24,10 @@ export class BookService {
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const { userId, categoryId, tags: tagNames, ...bookData } = createBookDto;
 
-    const user = await this.userRepository.findOne({
-      where: { id: userId },
-    });
+    const user = await this.userRepository.findOneBy({ id: userId });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new NotFoundException("User not found");
     }
 
     const category = await this.categoryRepository.findOne({
@@ -37,7 +35,7 @@ export class BookService {
     });
 
     if (!category) {
-      throw new Error("Category not found");
+      throw new NotFoundException("Category not found");
     }
 
     const tags = await this.getOrCreateTags(tagNames);
@@ -53,12 +51,27 @@ export class BookService {
   }
 
   async findAll() {
-    return await this.bookRepository.findAndCount();
+    return await this.bookRepository.findAndCount({
+      relations: {
+        user: true,
+      },
+    });
   }
 
   async findOne(id: string) {
     return this.bookRepository.findOne({
       where: { id },
+    });
+  }
+
+  async getRecentReleases(quantity: number) {
+    return await this.bookRepository.find({
+      order: { createdAt: "DESC" },
+      take: quantity,
+      relations: {
+        user: true,
+        tags: true,
+      },
     });
   }
 
@@ -70,7 +83,7 @@ export class BookService {
     });
 
     if (!category) {
-      throw new Error("Category not found");
+      throw new NotFoundException("Category not found");
     }
 
     const tags = await this.getOrCreateTags(tagNames);
@@ -100,33 +113,43 @@ export class BookService {
     return book;
   }
 
-  private async getOrCreateTags(tagNames: string[]): Promise<Tag[]> {
-    if (!tagNames || tagNames.length === 0) {
-      return [];
-    }
-
-    // Encontre tags existentes pelo nome
-    const existingTags = await this.tagRepository.findBy({
-      name: In(tagNames),
-    });
-
-    const existingTagNames = existingTags.map((tag) => tag.name);
-
-    // Encontre nomes de tags que não existem no banco de dados
-    const newTagNames = tagNames.filter(
-      (name) => !existingTagNames.includes(name)
-    );
-
-    // Crie novas tags para os nomes que não existem
-    const newTags = await Promise.all(
-      newTagNames.map(async (name) => {
-        const tag = new Tag();
-        tag.name = name;
-        return await this.tagRepository.save(tag);
+  private async getOrCreateTags(tagNames: string[]) {
+    const tags = await Promise.all(
+      tagNames.map(async (name) => {
+        let tag = await this.tagRepository.findOne({ where: { name } });
+        if (!tag) {
+          tag = this.tagRepository.create({ name, usageCount: 1 });
+          await this.tagRepository.save(tag);
+        } else {
+          tag.usageCount++;
+          await this.tagRepository.save(tag);
+        }
+        return tag;
       })
     );
 
-    // Combine tags existentes com as novas tags criadas
-    return [...existingTags, ...newTags];
+    return tags;
+  }
+
+  async findByCategory(categoryId: string) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      throw new NotFoundException("Category not found");
+    }
+
+    return await this.bookRepository.find({
+      where: {
+        category: {
+          id: categoryId,
+        },
+      },
+      relations: {
+        user: true,
+        tags: true,
+      },
+    });
   }
 }

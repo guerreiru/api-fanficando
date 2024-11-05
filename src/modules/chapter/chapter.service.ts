@@ -28,12 +28,10 @@ export class ChapterService {
   async create(createChapterDto: CreateChapterDto) {
     const { bookId, ...chapterData } = createChapterDto;
 
-    const book = await this.bookRepository.findOne({
-      where: { id: bookId },
-    });
+    const book = await this.bookRepository.findOneBy({ id: bookId });
 
     if (!book) {
-      throw new Error("Book not found");
+      throw new NotFoundException("Book not found");
     }
 
     const chapter = this.chapteRepository.create({

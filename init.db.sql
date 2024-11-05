@@ -160,3 +160,16 @@ CREATE TABLE book_tags_tag (
     FOREIGN KEY (book_id) REFERENCES book(id),
     FOREIGN KEY (tag_id) REFERENCES tag(id)
 );
+
+CREATE TABLE user_book (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL,
+    book_id UUID NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    progress DECIMAL(5,2) DEFAULT 0,
+    last_read_chapter INTEGER,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES "user" (id),
+    FOREIGN KEY (book_id) REFERENCES book (id)
+);

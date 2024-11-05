@@ -3,6 +3,7 @@ import { Chapter } from "src/modules/chapter/entities/chapter.entity";
 import { Character } from "src/modules/character/entities/character.entity";
 import { Review } from "src/modules/review/entities/review.entity";
 import { Tag } from "src/modules/tag/entities/tag.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 import { User } from "src/modules/user/entities/user.entity";
 import {
   Column,
@@ -25,20 +26,26 @@ export class Book {
   @Column({ type: "varchar", length: 50 })
   title: string;
 
-  @Column({ type: "varchar", length: 120 })
+  @Column({ type: "varchar", length: 200 })
   description: string;
 
-  @Column()
+  @Column({ type: "varchar", length: 50 })
   audience: string;
 
   @Column({ type: "varchar", length: 50 })
   language: string;
 
-  @Column()
+  @Column({ name: "author_rights", nullable: false })
   authorRights: string;
 
   @Column({ name: "cover_image", nullable: true })
   coverImage?: string;
+
+  @Column({ type: "boolean", default: false })
+  mature?: boolean;
+
+  @Column({ type: "boolean", default: false })
+  published?: boolean;
 
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
@@ -62,7 +69,7 @@ export class Book {
 
   @ManyToMany(() => Tag, (tag) => tag.books)
   @JoinTable({
-    name: "book_tags", // Nome da tabela de junção
+    name: "book_tag", // Nome da tabela de junção
     joinColumn: { name: "book_id", referencedColumnName: "id" },
     inverseJoinColumn: { name: "tag_id", referencedColumnName: "id" },
   })
@@ -70,4 +77,7 @@ export class Book {
 
   @OneToMany(() => Review, (review) => review.book)
   reviews: Review[];
+
+  @OneToMany(() => UserBook, (userBook) => userBook.book)
+  userBooks: UserBook[];
 }

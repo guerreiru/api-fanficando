@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-import { Env } from "src/schemas/zod.schemas";
+import { Env } from "src/common/schemas/zod.schemas";
 import { UserModule } from "../user/user.module";
 import { AuthenticateController } from "./authenticate.controller";
 import { JwtStrategy } from "./jwt.strategy";

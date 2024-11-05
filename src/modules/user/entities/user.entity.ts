@@ -1,5 +1,7 @@
 import { Book } from "src/modules/book/entities/book.entity";
+import { Comment } from "src/modules/comment/entities/comment.entity";
 import { Review } from "src/modules/review/entities/review.entity";
+import { UserBook } from "src/modules/user-book/entities/user-book.entity";
 import {
   Column,
   CreateDateColumn,
@@ -45,6 +47,9 @@ export class User {
   @Column({ name: "birth_date", nullable: false })
   birthDate: Date;
 
+  @Column({ name: "profile_img_url", nullable: true })
+  profileImgUrl: string;
+
   @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
@@ -56,4 +61,10 @@ export class User {
 
   @OneToMany(() => Review, (review) => review.user)
   reviews: Review[];
+
+  @OneToMany(() => Comment, (comments) => comments.user)
+  comments: Comment[];
+
+  @OneToMany(() => UserBook, (userBook) => userBook.user)
+  userBooks: UserBook[];
 }

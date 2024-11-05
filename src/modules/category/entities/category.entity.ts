@@ -22,7 +22,7 @@ export class Category {
     nullable: false,
     unique: true,
     type: "varchar",
-    length: 50,
+    length: 20,
   })
   name: string;
 

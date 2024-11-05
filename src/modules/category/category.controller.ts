@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/modules/auth/jwt-auth.guard";
-import { ZodValidationPipe } from "src/pipes/zod-validation-pipe";
-import { createCategoryBodySchema } from "src/schemas/zod.schemas";
+import { ZodValidationPipe } from "src/common/pipes/zod-validation-pipe";
+import { createCategoryBodySchema } from "src/common/schemas/zod.schemas";
 import { CategoryService } from "./category.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
