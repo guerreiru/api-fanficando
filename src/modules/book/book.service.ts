@@ -61,6 +61,9 @@ export class BookService {
   async findOne(id: string) {
     return this.bookRepository.findOne({
       where: { id },
+      relations: {
+        chapters: true,
+      },
     });
   }
 
