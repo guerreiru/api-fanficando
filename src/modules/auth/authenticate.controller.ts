@@ -40,10 +40,14 @@ export class AuthenticateController {
 
     const accessToken = this.jwt.sign({
       sub: user.id,
+      email: user.email,
+      name: user.name,
+      imgUrl: user.profileImgUrl,
     });
 
     return {
       access_token: accessToken,
+      name: user.name,
     };
   }
 }

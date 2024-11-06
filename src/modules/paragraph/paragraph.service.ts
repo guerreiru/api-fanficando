@@ -44,12 +44,20 @@ export class ParagraphService {
     return this.paragraphRepository.save(paragraphEntities);
   }
 
-  findAll() {
+  async findAll() {
     return this.commentRepository.findAndCount();
   }
 
-  findOne(id: number) {
+  async findOne(id: string) {
     return `This action returns a #${id} paragraph`;
+  }
+
+  async findAllByChapterId(chapterId: string) {
+    return this.paragraphRepository.find({
+      where: {
+        chapter: { id: chapterId },
+      },
+    });
   }
 
   async findAllComments(paragraphId: string) {
@@ -60,11 +68,11 @@ export class ParagraphService {
     });
   }
 
-  update(id: number, updateParagraphDto: UpdateParagraphDto) {
+  async update(id: number, updateParagraphDto: UpdateParagraphDto) {
     return `This action updates a #${id} paragraph`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} paragraph`;
   }
 }
