@@ -40,7 +40,12 @@ export class ParagraphController {
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.paragraphService.findOne(+id);
+    return this.paragraphService.findOne(id);
+  }
+
+  @Get("/chapter/:chapterId")
+  findAllByChapterId(@Param("chapterId") chapterId: string) {
+    return this.paragraphService.findAllByChapterId(chapterId);
   }
 
   @Patch(":id")
