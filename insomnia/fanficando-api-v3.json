@@ -1,0 +1,645 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-08-27T21:05:00.000Z",
+  "__export_source": "fanficando.api-v3",
+  "resources": [
+    {
+      "_id": "wrk_fanficando_api_v3",
+      "parentId": null,
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "name": "Fanficando API v3",
+      "description": "Rotas atuais da api-fanficando (Nest). Prefixo global: /api, exceto GET /.\n\nImportar: Insomnia → Import → From File.\nCookies httpOnly: access_token (path /), refresh_token e profile_completion (path /api/auth), age_ack (path /). Deixe Send cookies e Store cookies ligados.\nFluxo e-mail: Register (sem sessão, dispara e-mail de verificação) → GET/POST verify-email → Login (exige e-mail verificado) → Me → Refresh → Logout.\nFluxo Google: POST google/token → se requiresProfileCompletion, POST complete-profile (cookie) → Me → Refresh → Logout.\nPorta padrão: 3001.",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_fanficando_api_v3_base",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3001",
+        "email": "maria@test.com",
+        "password": "SenhaForte1",
+        "username": "mariasilva",
+        "google_credential": "COLE_O_ID_TOKEN_DO_GOOGLE",
+        "email_token": "COLE_O_TOKEN_DO_EMAIL",
+        "new_email": "maria.nova@test.com"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url",
+          "email",
+          "password",
+          "username",
+          "google_credential",
+          "email_token",
+          "new_email"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_fanficando_api_v3",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "fld_fanficando_v3_health",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "name": "Health",
+      "description": "Sem prefixo /api.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -2000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "fld_fanficando_v3_auth",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "name": "Auth",
+      "description": "Cadastro por e-mail exige username, terms_accepted, age_verified e birth_date (idade mínima 13). Register não abre sessão: dispara o e-mail de verificação e devolve requiresEmailVerification. Enquanto o e-mail não for confirmado, login, refresh e rotas autenticadas respondem 403 EMAIL_NOT_VERIFIED. Google: POST /api/auth/google/token com credential (ID token). Conta nova volta requiresProfileCompletion e cookie profile_completion; em seguida POST /api/auth/complete-profile com birth_date, age_verified, acceptTerms e username.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1000,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_v3_health",
+      "parentId": "fld_fanficando_v3_health",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/",
+      "name": "GET /",
+      "description": "Health check. Fora do prefixo /api. Público.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_register",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/register",
+      "name": "POST /api/auth/register",
+      "description": "Público. Não grava cookies: devolve o usuário com requiresEmailVerification=true e dispara o e-mail de verificação em background. A sessão só nasce no login, depois do e-mail confirmado.\nObrigatório: email, password (mín. 8), username (3–50, começa com letra), birth_date, age_verified=true, terms_accepted=true.\nOpcional: name. Pode devolver suggestion com domínio corrigido (ex.: gmail.com).\nE-mail já cadastrado responde 409 REGISTRATION_REJECTED (genérico, para não permitir enumeração).\nTambém aceita camelCase: birthDate, ageVerified, termsAccepted.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Maria Silva\",\n  \"username\": \"mariasilva\",\n  \"email\": \"{{ _.email }}\",\n  \"password\": \"{{ _.password }}\",\n  \"birth_date\": \"1995-03-10\",\n  \"age_verified\": true,\n  \"terms_accepted\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -5000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_login",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/login",
+      "name": "POST /api/auth/login",
+      "description": "Público. Conta completa e e-mail verificado: grava cookies de sessão. Conta password não verificada: 403 EMAIL_NOT_VERIFIED. Perfil incompleto (sem birth_date/age_verified): 200 com requiresProfileCompletion=true e cookie profile_completion, sem sessão.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ _.email }}\",\n  \"password\": \"{{ _.password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -4000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_google_token",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/google/token",
+      "name": "POST /api/auth/google/token",
+      "description": "Público. Body: credential ou idToken (JWT do Google Identity Services). Conta nova: 200 com requiresProfileCompletion=true, socialProfile e cookie profile_completion (sem sessão). Conta Google já completa: grava cookies de sessão. Não vincula automaticamente a conta de e-mail/senha existente: qualquer colisão responde 409 GOOGLE_SIGN_IN_REJECTED, sem dizer se o e-mail já tem conta.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"credential\": \"{{ _.google_credential }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -3500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_complete_profile",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/complete-profile",
+      "name": "POST /api/auth/complete-profile (cookie)",
+      "description": "Fluxo Google/login incompleto. Usa cookie profile_completion (HttpOnly, path /api/auth). Body: birth_date, age_verified=true, acceptTerms=true, username (3–50, começa com letra). Grava cookies de sessão e limpa profile_completion.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"birth_date\": \"1995-03-10\",\n  \"age_verified\": true,\n  \"acceptTerms\": true,\n  \"username\": \"{{ _.username }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -3250,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_complete_profile_auth",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/complete-profile",
+      "name": "POST /api/auth/complete-profile (sessão)",
+      "description": "Mesma rota, modo autenticado. Só vale se NÃO houver cookie profile_completion: exige access_token e body com displayName + acceptTerms além de birth_date, age_verified e username.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"birth_date\": \"1995-03-10\",\n  \"age_verified\": true,\n  \"username\": \"{{ _.username }}\",\n  \"displayName\": \"Maria Silva\",\n  \"acceptTerms\": true\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -3125,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_me",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/me",
+      "name": "GET /api/auth/me",
+      "description": "Autenticado. Cookie access_token (path /) ou Authorization: Bearer. Resposta inclui requiresProfileCompletion. Se true, também grava cookie profile_completion.",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -3000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_refresh",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/refresh",
+      "name": "POST /api/auth/refresh",
+      "description": "Público na rota, mas exige cookie refresh_token (path /api/auth). Sem body. Rotaciona a sessão.",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -2000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_logout",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756316220000,
+      "created": 1756316220000,
+      "url": "{{ _.base_url }}/api/auth/logout",
+      "name": "POST /api/auth/logout",
+      "description": "Revoga o refresh_token e limpa access_token, refresh_token e profile_completion. Sem body.",
+      "method": "POST",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_visitor_age_ack",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/visitor-age-ack",
+      "name": "POST /api/auth/visitor-age-ack",
+      "description": "Público. Body requiredAge: 12|14|16|18. Grava cookie HMAC age_ack (path /). 12/14/16 viram tier 16; 18 vira 18.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"requiredAge\": 16\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_verify_email_preview",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/verify-email",
+      "name": "GET /api/auth/verify-email",
+      "description": "Preview do token de verificação (?token=). { valid } ou { valid, alreadyVerified }.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "token",
+          "value": "{{ _.email_token }}",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_verify_email_confirm",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/verify-email",
+      "name": "POST /api/auth/verify-email",
+      "description": "Confirma o token (body ou query). Marca emailVerified.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"{{ _.email_token }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_resend_verification",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/resend-verification",
+      "name": "POST /api/auth/resend-verification",
+      "description": "Logado: reenvia para o usuário da sessão. Senão body email. A resposta é sempre { success: true } — inexistente, já verificado ou reenviado — para não permitir enumeração. Sem e-mail e sem sessão: 400 EMAIL_REQUIRED.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ _.email }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_forgot_password",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/forgot-password",
+      "name": "POST /api/auth/forgot-password",
+      "description": "Sempre { success: true }. Não envia para contas Google/social. Token vale 1h.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"{{ _.email }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1100,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_reset_password_preview",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/reset-password",
+      "name": "GET /api/auth/reset-password",
+      "description": "Preview do token de redefinição (?token=). { valid: true }.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "token",
+          "value": "{{ _.email_token }}",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1050,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_reset_password_confirm",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/reset-password",
+      "name": "POST /api/auth/reset-password",
+      "description": "Body token + password (mín. 8). Atualiza o hash e revoga todos os refresh tokens.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"{{ _.email_token }}\",\n  \"password\": \"{{ _.password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1025,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_confirm_email_change_preview",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/confirm-email-change",
+      "name": "GET /api/auth/confirm-email-change",
+      "description": "Preview: { valid, pendingEmail, currentEmail }.",
+      "method": "GET",
+      "body": {},
+      "parameters": [
+        {
+          "name": "token",
+          "value": "{{ _.email_token }}",
+          "disabled": false
+        }
+      ],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1010,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_confirm_email_change",
+      "parentId": "fld_fanficando_v3_auth",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/auth/confirm-email-change",
+      "name": "POST /api/auth/confirm-email-change",
+      "description": "Aplica o novo e-mail e marca como verificado.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"{{ _.email_token }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1005,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_fanficando_v3_users",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "name": "Users",
+      "description": "Pedido autenticado de troca de e-mail. A confirmação fica em Auth → confirm-email-change.",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -500,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_v3_change_email",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1756328400000,
+      "created": 1756328400000,
+      "url": "{{ _.base_url }}/api/users/me/change-email",
+      "name": "POST /api/users/me/change-email",
+      "description": "Autenticado. Body newEmail (ou email) + currentPassword (ou password). Contas Google: 400 SOCIAL_ACCOUNT. Envia link para o novo e-mail.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"newEmail\": \"{{ _.new_email }}\",\n  \"currentPassword\": \"{{ _.password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    }
+  ]
+}
