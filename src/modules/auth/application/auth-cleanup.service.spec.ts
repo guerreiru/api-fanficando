@@ -10,15 +10,15 @@ jest.mock('../infrastructure/email-verification-token.repository', () => ({
 
 import { Logger } from '@nestjs/common';
 import { EMAIL_VERIFICATION_TTL_MS } from '../domain/auth.constants';
-import { SessionCleanupService } from './session-cleanup.service';
+import { AuthCleanupService } from './auth-cleanup.service';
 
-describe('SessionCleanupService', () => {
+describe('AuthCleanupService', () => {
   const refreshTokens = { deleteExpiredBefore: jest.fn() };
   const users = { deleteUnverifiedRegistrations: jest.fn() };
   const emailVerificationTokens = { deleteExpiredBefore: jest.fn() };
   const config = { get: jest.fn() };
 
-  const service = new SessionCleanupService(
+  const service = new AuthCleanupService(
     refreshTokens as never,
     users as never,
     emailVerificationTokens as never,
