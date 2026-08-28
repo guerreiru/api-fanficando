@@ -108,7 +108,7 @@
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/register",
       "name": "POST /api/auth/register",
-      "description": "Público. Não grava cookies: devolve o usuário com requiresEmailVerification=true e dispara o e-mail de verificação em background. A sessão só nasce no login, depois do e-mail confirmado.\nObrigatório: email, password (mín. 8), username (3–50, começa com letra), birth_date, age_verified=true, terms_accepted=true.\nOpcional: name. Pode devolver suggestion com domínio corrigido (ex.: gmail.com).\nE-mail já cadastrado responde 409 REGISTRATION_REJECTED (genérico, para não permitir enumeração).\nTambém aceita camelCase: birthDate, ageVerified, termsAccepted.",
+      "description": "Público. Não grava cookies: devolve o usuário com requiresEmailVerification=true e dispara o e-mail de verificação em background. A sessão só nasce no login, depois do e-mail confirmado.\nObrigatório: email, password (mín. 8), username (3–50, começa com letra), birth_date, age_verified=true, terms_accepted=true.\nOpcional: name. Pode devolver suggestion com domínio corrigido (ex.: gmail.com).\nE-mail já cadastrado responde 409 REGISTRATION_REJECTED (genérico, para não permitir enumeração).\nTambém aceita camelCase: birthDate, ageVerified, termsAccepted.\nCadastro que nunca confirma o e-mail não fica preso: a limpeza automática (a cada 6 h) apaga a conta depois de 24 h sem token de verificação vivo, com teto de 7 dias mesmo com reenvios. Isso libera o e-mail e o username — inclusive quando alguém cadastra o endereço de outra pessoa só para bloqueá-la.",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
@@ -201,7 +201,7 @@
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/complete-profile",
       "name": "POST /api/auth/complete-profile (cookie)",
-      "description": "Fluxo Google/login incompleto. Usa cookie profile_completion (HttpOnly, path /api/auth). Body: birth_date, age_verified=true, acceptTerms=true, username (3–50, começa com letra). Grava cookies de sessão e limpa profile_completion.",
+      "description": "Fluxo Google/login incompleto. Usa cookie profile_completion (HttpOnly, path /api/auth). Body: birth_date, age_verified=true, acceptTerms=true, username (3–50, começa com letra). Grava cookies de sessão e limpa profile_completion.\nConta suspensa: 403 ACCOUNT_SUSPENDED, mesmo com o cookie ainda dentro dos 30 min de validade.",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
@@ -232,7 +232,7 @@
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/complete-profile",
       "name": "POST /api/auth/complete-profile (sessão)",
-      "description": "Mesma rota, modo autenticado. Só vale se NÃO houver cookie profile_completion: exige access_token e body com displayName + acceptTerms além de birth_date, age_verified e username.",
+      "description": "Mesma rota, modo autenticado. Só vale se NÃO houver cookie profile_completion: exige access_token e body com displayName + acceptTerms além de birth_date, age_verified e username.\nConta suspensa: 403 ACCOUNT_SUSPENDED.",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
