@@ -31,6 +31,32 @@ describe('OriginGuard', () => {
     ).toThrow();
   });
 
+  it('blocks the opaque origin of a sandboxed iframe', () => {
+    expect(() =>
+      guard(allowed).canActivate(context({ method: 'POST', origin: 'null' })),
+    ).toThrow();
+  });
+
+  it('does not let Origin: null fall back to the non-browser branch', () => {
+    expect(() =>
+      guard(allowed).canActivate(
+        context({
+          method: 'POST',
+          origin: 'null',
+          referer: 'https://fanficando.com/page',
+        }),
+      ),
+    ).toThrow();
+  });
+
+  it('blocks an origin that parses without a host', () => {
+    expect(() =>
+      guard(allowed).canActivate(
+        context({ method: 'POST', origin: 'data:text/html,<form>' }),
+      ),
+    ).toThrow();
+  });
+
   it('ignores GET even from an unknown origin', () => {
     expect(
       guard(allowed).canActivate(
