@@ -9,7 +9,7 @@ import { EmailChangeService } from './application/email-change.service';
 import { EmailVerificationService } from './application/email-verification.service';
 import { PasswordResetService } from './application/password-reset.service';
 import { PasswordService } from './application/password.service';
-import { SessionCleanupService } from './application/session-cleanup.service';
+import { AuthCleanupService } from './application/auth-cleanup.service';
 import { SessionService } from './application/session.service';
 import { AuthUserRepository } from './infrastructure/auth-user.repository';
 import { EmailChangeTokenRepository } from './infrastructure/email-change-token.repository';
@@ -58,7 +58,7 @@ import { AuthGuard } from './presentation/guards/auth.guard';
     EmailChangeService,
     PasswordService,
     SessionService,
-    SessionCleanupService,
+    AuthCleanupService,
     AuthUserRepository,
     RefreshTokenRepository,
     EmailVerificationTokenRepository,
