@@ -201,7 +201,7 @@
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/complete-profile",
       "name": "POST /api/auth/complete-profile (cookie)",
-      "description": "Fluxo Google/login incompleto. Usa cookie profile_completion (HttpOnly, path /api/auth). Body: birth_date, age_verified=true, acceptTerms=true, username (3–50, começa com letra). Grava cookies de sessão e limpa profile_completion.\nConta suspensa: 403 ACCOUNT_SUSPENDED, mesmo com o cookie ainda dentro dos 30 min de validade.",
+      "description": "Fluxo Google/login incompleto. Usa cookie profile_completion (HttpOnly, path /api/auth). Body: birth_date, age_verified=true, acceptTerms=true, username (3–50, começa com letra). Grava cookies de sessão e limpa profile_completion.\nConta suspensa: 403 ACCOUNT_SUSPENDED, mesmo com o cookie profile_completion ainda válido.",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
