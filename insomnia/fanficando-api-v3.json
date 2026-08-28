@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-08-27T21:05:00.000Z",
+  "__export_date": "2026-08-28T17:40:00.000Z",
   "__export_source": "fanficando.api-v3",
   "resources": [
     {
@@ -104,7 +104,7 @@
     {
       "_id": "req_v3_register",
       "parentId": "fld_fanficando_v3_auth",
-      "modified": 1756316220000,
+      "modified": 1756414800000,
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/register",
       "name": "POST /api/auth/register",
@@ -197,7 +197,7 @@
     {
       "_id": "req_v3_complete_profile",
       "parentId": "fld_fanficando_v3_auth",
-      "modified": 1756316220000,
+      "modified": 1756414800000,
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/complete-profile",
       "name": "POST /api/auth/complete-profile (cookie)",
@@ -228,7 +228,7 @@
     {
       "_id": "req_v3_complete_profile_auth",
       "parentId": "fld_fanficando_v3_auth",
-      "modified": 1756316220000,
+      "modified": 1756414800000,
       "created": 1756316220000,
       "url": "{{ _.base_url }}/api/auth/complete-profile",
       "name": "POST /api/auth/complete-profile (sessão)",
@@ -419,11 +419,11 @@
     {
       "_id": "req_v3_resend_verification",
       "parentId": "fld_fanficando_v3_auth",
-      "modified": 1756328400000,
+      "modified": 1756414800000,
       "created": 1756328400000,
       "url": "{{ _.base_url }}/api/auth/resend-verification",
       "name": "POST /api/auth/resend-verification",
-      "description": "Logado: reenvia para o usuário da sessão. Senão body email. A resposta é sempre { success: true } — inexistente, já verificado ou reenviado — para não permitir enumeração. Sem e-mail e sem sessão: 400 EMAIL_REQUIRED.",
+      "description": "Logado: reenvia para o usuário da sessão. Senão body email. A resposta é sempre { success: true } — inexistente, já verificado ou reenviado — para não permitir enumeração. Sem e-mail e sem sessão: 400 EMAIL_REQUIRED.\nConta Google/social não é alterada por aqui: responde { success: true } sem escrever nada no registro, já que a rota é pública e aceita qualquer e-mail no corpo.",
       "method": "POST",
       "body": {
         "mimeType": "application/json",
