@@ -108,8 +108,10 @@ export class EmailVerificationService {
       return { success: true as const };
     }
 
+    // Conta social nunca é escrita por aqui: o endpoint é público e aceita um
+    // e-mail arbitrário no corpo, então marcar `emailVerified` seria uma
+    // escrita não autenticada num campo de verificação.
     if (!isPasswordAccount(user)) {
-      await this.tokens.markUserVerified(user.id);
       return { success: true as const };
     }
 

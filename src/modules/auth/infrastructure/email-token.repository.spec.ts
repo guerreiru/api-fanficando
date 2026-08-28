@@ -83,6 +83,17 @@ describe('email token repositories', () => {
     );
   });
 
+  it('purges verification tokens that already expired', async () => {
+    const repository = new EmailVerificationTokenRepository(prisma as never);
+    prisma.emailVerificationToken.deleteMany.mockResolvedValue({ count: 4 });
+    const cutoff = new Date();
+
+    await expect(repository.deleteExpiredBefore(cutoff)).resolves.toBe(4);
+    expect(prisma.emailVerificationToken.deleteMany).toHaveBeenCalledWith({
+      where: { expiresAt: { lt: cutoff } },
+    });
+  });
+
   it('never stores the raw email change token', async () => {
     const repository = new EmailChangeTokenRepository(prisma as never);
 

@@ -17,7 +17,7 @@ describe('EmailVerificationService', () => {
     createToken: jest.fn(),
     findByToken: jest.fn(),
     deleteToken: jest.fn(),
-    markUserVerified: jest.fn(),
+    deleteExpiredBefore: jest.fn(),
     confirmVerification: jest.fn(),
   };
   const users = {
@@ -48,7 +48,7 @@ describe('EmailVerificationService', () => {
     expect(mail.sendVerificationEmail).not.toHaveBeenCalled();
   });
 
-  it('marks a social account as verified on resend', async () => {
+  it('never writes to a social account from the public resend', async () => {
     users.findByEmail.mockResolvedValue({
       id: 'user-1',
       email: 'ana@gmail.com',
@@ -60,7 +60,7 @@ describe('EmailVerificationService', () => {
     await expect(service.resend(undefined, 'ana@gmail.com')).resolves.toEqual({
       success: true,
     });
-    expect(tokens.markUserVerified).toHaveBeenCalledWith('user-1');
+    expect(tokens.createToken).not.toHaveBeenCalled();
     expect(mail.sendVerificationEmail).not.toHaveBeenCalled();
   });
 
