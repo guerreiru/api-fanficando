@@ -278,9 +278,15 @@ export class AuthService {
             .userId
         : parsed.userId;
 
-    const existing = await this.users.findById(userId);
+    // `findAuthContext` em vez de `findById` porque `AUTH_USER_SELECT` não traz
+    // `suspendedAt`, e este caminho também emite sessão.
+    const existing = await this.users.findAuthContext(userId);
     if (!existing) {
       throw unauthenticated();
+    }
+
+    if (existing.suspendedAt) {
+      throw accountSuspended();
     }
 
     if (await this.users.isUsernameTaken(parsed.username, userId)) {

@@ -284,6 +284,42 @@ export class AuthUserRepository {
     return mapAuthUser(user);
   }
 
+  /**
+   * Cadastro nunca confirmado é squatting: enquanto a linha existe, o e-mail e
+   * o username ficam bloqueados para o dono real, que não tem como recuperar
+   * (não tem senha, e `create` responde com o erro genérico de colisão).
+   *
+   * `refreshTokens: none` é a rede de segurança — conta que já abriu sessão
+   * nunca é apagada por aqui.
+   */
+  async deleteUnverifiedRegistrations(params: {
+    /** Antes disto o primeiro link já venceu (TTL do token de verificação). */
+    createdBefore: Date;
+    /** Teto absoluto: nem reenviar em loop segura o e-mail além disto. */
+    abandonedBefore: Date;
+    now: Date;
+  }): Promise<number> {
+    const { count } = await this.prisma.user.deleteMany({
+      where: {
+        emailVerified: false,
+        socialProvider: null,
+        googleId: null,
+        refreshTokens: { none: {} },
+        OR: [
+          {
+            createdAt: { lt: params.createdBefore },
+            // Quem pediu reenvio há pouco continua com o link válido.
+            emailVerificationTokens: {
+              none: { expiresAt: { gt: params.now } },
+            },
+          },
+          { createdAt: { lt: params.abandonedBefore } },
+        ],
+      },
+    });
+    return count;
+  }
+
   async create(data: {
     email: string;
     password: string;

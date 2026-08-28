@@ -28,6 +28,7 @@ describe('AuthService', () => {
     findByEmail: jest.fn(),
     findById: jest.fn(),
     findAuthById: jest.fn(),
+    findAuthContext: jest.fn(),
     create: jest.fn(),
     findSocialAccount: jest.fn(),
     upsertSocialAccount: jest.fn(),
@@ -394,7 +395,10 @@ describe('AuthService', () => {
 
   it('completes a Google profile from the completion cookie', async () => {
     profileCompletionTokens.verify.mockResolvedValue({ userId: 'user-google' });
-    users.findById.mockResolvedValue({ id: 'user-google' });
+    users.findAuthContext.mockResolvedValue({
+      id: 'user-google',
+      suspendedAt: null,
+    });
     users.isUsernameTaken.mockResolvedValue(false);
     users.completeProfile.mockResolvedValue({
       id: 'user-google',
@@ -422,6 +426,32 @@ describe('AuthService', () => {
       }),
     );
     expect(sessions.issue).toHaveBeenCalled();
+  });
+
+  it('refuses to complete the profile of an account suspended in the meantime', async () => {
+    profileCompletionTokens.verify.mockResolvedValue({ userId: 'user-google' });
+    users.findAuthContext.mockResolvedValue({
+      id: 'user-google',
+      suspendedAt: new Date(),
+    });
+
+    await expect(
+      service.completeProfile(
+        {
+          birth_date: '1995-03-10',
+          age_verified: true,
+          acceptTerms: true,
+          username: 'anasilva',
+        },
+        {},
+        undefined,
+        'completion.jwt',
+      ),
+    ).rejects.toMatchObject({
+      response: { code: AUTH_ERROR.ACCOUNT_SUSPENDED },
+    });
+    expect(users.completeProfile).not.toHaveBeenCalled();
+    expect(sessions.issue).not.toHaveBeenCalled();
   });
 
   it('does not mark terms as accepted when the Google flow omits acceptTerms', async () => {
