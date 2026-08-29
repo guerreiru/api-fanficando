@@ -20,6 +20,7 @@ import { PasswordResetTokenRepository } from './infrastructure/password-reset-to
 import { ProfileCompletionTokenService } from './infrastructure/profile-completion-token.service';
 import { RefreshTokenRepository } from './infrastructure/refresh-token.repository';
 import { AuthController } from './presentation/auth.controller';
+import { AdminGuard } from './presentation/guards/admin.guard';
 import { AuthGuard } from './presentation/guards/auth.guard';
 
 @Global()
@@ -68,11 +69,21 @@ import { AuthGuard } from './presentation/guards/auth.guard';
     GoogleIdTokenService,
     ProfileCompletionTokenService,
     AuthGuard,
+    AdminGuard,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
   ],
-  exports: [AuthGuard, JwtAccessService, EmailChangeService],
+  exports: [
+    AuthGuard,
+    AdminGuard,
+    JwtAccessService,
+    EmailChangeService,
+    // Identidade e credencial continuam sendo do auth: os outros módulos
+    // consomem estas peças em vez de reimplementar as regras.
+    AuthUserRepository,
+    PasswordService,
+  ],
 })
 export class AuthModule {}

@@ -13,20 +13,18 @@ import {
 } from '../domain/visitor-age';
 import { readCookie } from './read-cookie';
 
-export type CookieEnv = Pick<
+export type BaseCookieEnv = Pick<
   AppEnv,
-  | 'COOKIE_SECURE'
-  | 'COOKIE_SAMESITE'
-  | 'COOKIE_DOMAIN'
-  | 'JWT_PROFILE_COMPLETION_EXPIRES_IN'
-> & {
-  AGE_ACK_SECRET: string;
-  COOKIE_AGE_ACK_MAX_AGE_MS: number;
-};
+  'COOKIE_SECURE' | 'COOKIE_SAMESITE' | 'COOKIE_DOMAIN'
+>;
 
-function baseCookieOptions(
-  env: Pick<AppEnv, 'COOKIE_SECURE' | 'COOKIE_SAMESITE' | 'COOKIE_DOMAIN'>,
-): CookieOptions {
+export type CookieEnv = BaseCookieEnv &
+  Pick<AppEnv, 'JWT_PROFILE_COMPLETION_EXPIRES_IN'> & {
+    AGE_ACK_SECRET: string;
+    COOKIE_AGE_ACK_MAX_AGE_MS: number;
+  };
+
+function baseCookieOptions(env: BaseCookieEnv): CookieOptions {
   return {
     httpOnly: true,
     secure: env.COOKIE_SECURE,
@@ -55,7 +53,7 @@ export function setAuthCookies(
   });
 }
 
-export function clearAuthCookies(response: Response, env: CookieEnv) {
+export function clearAuthCookies(response: Response, env: BaseCookieEnv) {
   const base = baseCookieOptions(env);
 
   response.clearCookie(AUTH_COOKIES.access, {

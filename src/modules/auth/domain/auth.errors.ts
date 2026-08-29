@@ -40,6 +40,7 @@ export const AUTH_ERROR = {
   EMAIL_IN_USE: 'EMAIL_IN_USE',
   INVALID_REQUIRED_AGE: 'INVALID_REQUIRED_AGE',
   WEAK_PASSWORD: 'WEAK_PASSWORD',
+  ADMIN_REQUIRED: 'ADMIN_REQUIRED',
 } as const;
 
 export function invalidCredentials(): AuthException {
@@ -75,6 +76,14 @@ export function unauthenticated(): AuthException {
     HttpStatus.UNAUTHORIZED,
     'Usuário não autenticado.',
     AUTH_ERROR.UNAUTHENTICATED,
+  );
+}
+
+export function adminRequired(): AuthException {
+  return new AuthException(
+    HttpStatus.FORBIDDEN,
+    'Esta ação é restrita a administradores.',
+    AUTH_ERROR.ADMIN_REQUIRED,
   );
 }
 
