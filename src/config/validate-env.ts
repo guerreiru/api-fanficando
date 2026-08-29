@@ -25,7 +25,16 @@ export type AppEnv = {
   RESEND_FROM: string;
   EMAIL_LOGO_URL?: string;
   COOKIE_AGE_ACK_MAX_AGE_MS: number;
+  R2_PUBLIC_URL?: string;
+  AVATAR_ALLOWED_HOSTS: string[];
 };
+
+/**
+ * Avatares só podem apontar para o CDN da Cloudflare: a API guarda a URL, e
+ * URL de terceiro transformaria cada perfil visitado em um beacon de IP.
+ * `*.host` casa subdomínio.
+ */
+const DEFAULT_AVATAR_HOSTS = ['imagedelivery.net', '*.r2.dev'];
 
 function asString(value: unknown, fallback = ''): string {
   return typeof value === 'string' ? value : fallback;
@@ -43,6 +52,29 @@ function parseOrigins(config: Record<string, unknown>): string[] {
     .filter(Boolean);
 
   return [...new Set(raw)];
+}
+
+function hostFromUrl(value: string): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return new URL(value).hostname.toLowerCase() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function parseAvatarHosts(config: Record<string, unknown>): string[] {
+  const publicHost = hostFromUrl(asString(config.R2_PUBLIC_URL).trim());
+  const configured = asString(config.AVATAR_ALLOWED_HOSTS)
+    .split(',')
+    .map((host) => hostFromUrl(host.trim()) ?? host.trim().toLowerCase())
+    .filter(Boolean);
+
+  const hosts = [...configured, ...(publicHost ? [publicHost] : [])];
+  return [...new Set(hosts.length > 0 ? hosts : DEFAULT_AVATAR_HOSTS)];
 }
 
 function parseSameSite(value: string): AppEnv['COOKIE_SAMESITE'] {
@@ -124,5 +156,7 @@ export function validateEnv(
     COOKIE_AGE_ACK_MAX_AGE_MS:
       Number.parseInt(asString(config.COOKIE_AGE_ACK_MAX_AGE_MS), 10) ||
       180 * 24 * 60 * 60 * 1000,
+    R2_PUBLIC_URL: asString(config.R2_PUBLIC_URL).trim() || undefined,
+    AVATAR_ALLOWED_HOSTS: parseAvatarHosts(config),
   };
 }
