@@ -26,6 +26,7 @@ model User {
   socialProviderId     String?   @map("social_provider_id") @db.VarChar(255)
   googleId             String?   @map("google_id") @db.VarChar(255)
   emailNotifications   Boolean   @default(true) @map("email_notifications")
+  /// URL pública da imagem no CDN da Cloudflare. A API nunca guarda o binário.
   avatarUrl            String?   @map("avatar_url")
   bio                  String?
   authorVerified       Boolean   @default(false) @map("author_verified")
@@ -130,7 +131,6 @@ model Fanfic {
   title                String
   synopsis             String?
   content              String?
-  category             String?   @db.VarChar(100)
   categoryId           String?   @map("category_id") @db.Uuid
   authorName           String?   @map("author_name") @db.VarChar(255)
   authorId             String?   @map("author_id") @db.Uuid
@@ -182,8 +182,7 @@ model Fanfic {
 
   @@index([authorId])
   @@index([createdAt(sort: Desc)])
-  @@index([category, createdAt(sort: Desc)])
-  @@index([categoryId])
+  @@index([categoryId, createdAt(sort: Desc)])
   @@index([status, createdAt(sort: Desc)])
   @@index([translationOfStoryId])
   @@index([deletedAt])
