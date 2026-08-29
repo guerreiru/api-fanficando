@@ -1,7 +1,7 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2026-08-28T17:40:00.000Z",
+  "__export_date": "2026-08-28T21:29:34.878Z",
   "__export_source": "fanficando.api-v3",
   "resources": [
     {
@@ -17,7 +17,7 @@
     {
       "_id": "env_fanficando_api_v3_base",
       "parentId": "wrk_fanficando_api_v3",
-      "modified": 1756316220000,
+      "modified": 1787949900000,
       "created": 1756316220000,
       "name": "Base Environment",
       "data": {
@@ -27,7 +27,14 @@
         "username": "mariasilva",
         "google_credential": "COLE_O_ID_TOKEN_DO_GOOGLE",
         "email_token": "COLE_O_TOKEN_DO_EMAIL",
-        "new_email": "maria.nova@test.com"
+        "new_email": "maria.nova@test.com",
+        "new_username": "mariaescritora",
+        "new_password": "SenhaForte2",
+        "avatar_url": "https://fanficando.com/cdn/avatars/maria.webp",
+        "category_id": "COLE_O_ID_DA_CATEGORIA",
+        "category_name": "Anime e Mangá",
+        "tag_name": "Enemies to Lovers",
+        "tag_slug": "enemies-to-lovers"
       },
       "dataPropertyOrder": {
         "&": [
@@ -37,7 +44,10 @@
           "username",
           "google_credential",
           "email_token",
-          "new_email"
+          "new_email",
+          "new_username",
+          "new_password",
+          "avatar_url"
         ]
       },
       "color": null,
@@ -601,10 +611,10 @@
     {
       "_id": "fld_fanficando_v3_users",
       "parentId": "wrk_fanficando_api_v3",
-      "modified": 1756328400000,
+      "modified": 1787949900000,
       "created": 1756328400000,
       "name": "Users",
-      "description": "Pedido autenticado de troca de e-mail. A confirmação fica em Auth → confirm-email-change.",
+      "description": "Perfil próprio (GET/PATCH /me), troca de @username com intervalo de 30 dias, troca de senha, exclusão de conta e perfil público por @username. A confirmação da troca de e-mail fica em Auth → confirm-email-change.",
       "environment": {},
       "environmentPropertyOrder": null,
       "metaSortKey": -500,
@@ -632,6 +642,385 @@
       ],
       "authentication": {},
       "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_me",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/me",
+      "name": "GET /api/users/me",
+      "description": "Autenticado. Perfil completo do dono da conta: bio, avatar, preferências, selos de autor, stats (histórias visíveis, seguidores, seguindo) e usernameChangeAvailableAt (null = troca liberada).",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1400,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_update_profile",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/me",
+      "name": "PATCH /api/users/me",
+      "description": "Autenticado. Só os campos enviados mudam; null (ou \"\") limpa name/bio/avatarUrl. avatarUrl aceita apenas https no host do CDN da Cloudflare (R2_PUBLIC_URL / AVATAR_ALLOWED_HOSTS): fora dele responde 400 INVALID_AVATAR_URL. Body vazio: 400 NOTHING_TO_UPDATE. Bio até 500 caracteres.",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Maria Silva\",\n  \"bio\": \"Escrevo fanfics de fantasia.\",\n  \"avatarUrl\": \"{{ _.avatar_url }}\",\n  \"emailNotifications\": true,\n  \"tourVersion\": 1\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1300,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_change_username",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/me/username",
+      "name": "PATCH /api/users/me/username",
+      "description": "Autenticado. Formato: 3–50 caracteres, começa com letra, aceita letras, números e _. Já em uso: 409 USERNAME_TAKEN com suggestion. Antes de 30 dias da última troca: 409 USERNAME_CHANGE_TOO_SOON com availableAt.",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"username\": \"{{ _.new_username }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1200,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_change_password",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/me/change-password",
+      "name": "POST /api/users/me/change-password",
+      "description": "Autenticado. Revoga todas as sessões e limpa os cookies: é preciso entrar de novo. Contas Google: 400 SOCIAL_ACCOUNT. Senha atual errada: 400 INVALID_PASSWORD. Nova senha igual à atual: 400 SAME_PASSWORD.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currentPassword\": \"{{ _.password }}\",\n  \"newPassword\": \"{{ _.new_password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -900,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_delete",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/me",
+      "name": "DELETE /api/users/me",
+      "description": "Autenticado e irreversível. Conta com senha confirma em currentPassword; conta Google confirma digitando o próprio @username em confirmUsername (400 INVALID_CONFIRMATION). Sessões, biblioteca e comentários vão embora; as histórias ficam sem autor.",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"currentPassword\": \"{{ _.password }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_users_public_profile",
+      "parentId": "fld_fanficando_v3_users",
+      "modified": 1787949900000,
+      "created": 1787949900000,
+      "url": "{{ _.base_url }}/api/users/{{ _.username }}",
+      "name": "GET /api/users/:username",
+      "description": "Público. Só dados públicos: sem e-mail, data de nascimento ou flags de admin. Conta suspensa ou com e-mail não confirmado responde 404 PROFILE_NOT_FOUND, igual a @username inexistente.",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_fanficando_v3_catalog",
+      "parentId": "wrk_fanficando_api_v3",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "name": "Catalog",
+      "description": "Categorias e tags. Leitura é pública; escrever categoria exige admin (403 ADMIN_REQUIRED) e criar tag exige sessão. storiesCount conta só história visível (sem lixeira e sem ocultação).",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -400,
+      "_type": "request_group"
+    },
+    {
+      "_id": "req_v3_categories_list",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/categories",
+      "name": "GET /api/categories",
+      "description": "Público. Todas as categorias em ordem alfabética com storiesCount (só histórias visíveis).",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_categories_create",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/categories",
+      "name": "POST /api/categories (admin)",
+      "description": "Só admin. Body name. Nome é normalizado (espaços, HTML) e a unicidade ignora a caixa: 409 CATEGORY_NAME_TAKEN.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"{{ _.category_name }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -900,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_categories_rename",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/categories/{{ _.category_id }}",
+      "name": "PATCH /api/categories/:id (admin)",
+      "description": "Só admin. Renomeia. 404 CATEGORY_NOT_FOUND se o id não existir (ou não for uuid), 409 CATEGORY_NAME_TAKEN se colidir com outra.",
+      "method": "PATCH",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"{{ _.category_name }}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -800,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_categories_delete",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/categories/{{ _.category_id }}",
+      "name": "DELETE /api/categories/:id (admin)",
+      "description": "Só admin. As histórias não são apagadas: ficam sem categoria. Responde storiesUncategorized com quantas perderam o vínculo.",
+      "method": "DELETE",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -700,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_tags_list",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/tags?search={{ _.tag_slug }}&limit=20",
+      "name": "GET /api/tags",
+      "description": "Público. Autocomplete: search casa nome e slug (menos de 2 caracteres é ignorado), type filtra a classificação, limit vai até 50 (default 20).",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -600,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_tags_create",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/tags",
+      "name": "POST /api/tags",
+      "description": "Autenticado. names aceita uma tag ou a lista do editor (máx. 30). Reaproveita quem já existe pelo slug (caixa, acento e hífen não criam duplicata) e cria só o que falta. type vale apenas para as tags novas.",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"names\": [\"{{ _.tag_name }}\", \"Slow Burn\"],\n  \"type\": \"trope\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -500,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_v3_tags_by_slug",
+      "parentId": "fld_fanficando_v3_catalog",
+      "modified": 1787952574878,
+      "created": 1787952574878,
+      "url": "{{ _.base_url }}/api/tags/{{ _.tag_slug }}",
+      "name": "GET /api/tags/:slug",
+      "description": "Público. Tag pelo slug (case-insensitive) com storiesCount. 404 TAG_NOT_FOUND.",
+      "method": "GET",
+      "body": {
+        "mimeType": "application/json"
+      },
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -400,
       "isPrivate": false,
       "settingStoreCookies": true,
       "settingSendCookies": true,
